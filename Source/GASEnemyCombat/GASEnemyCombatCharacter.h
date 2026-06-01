@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "Characters/GASCharacterBase.h"
 #include "Logging/LogMacros.h"
 #include "GASEnemyCombatCharacter.generated.h"
 
@@ -19,7 +19,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
  *  Implements a controllable orbiting camera
  */
 UCLASS(abstract)
-class AGASEnemyCombatCharacter : public ACharacter
+class AGASEnemyCombatCharacter : public AGASCharacterBase
 {
 	GENERATED_BODY()
 
@@ -49,6 +49,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Input")
 	UInputAction* MouseLookAction;
 
+	/** Attack Input Action */
+	UPROPERTY(EditAnywhere, Category="Input")
+	UInputAction* AttackAction;
+
 public:
 
 	/** Constructor */
@@ -66,6 +70,9 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+
+	/** Called for light attack input */
+	void LightAttack();
 
 public:
 

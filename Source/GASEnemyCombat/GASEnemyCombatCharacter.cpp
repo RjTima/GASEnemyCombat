@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "GASEnemyCombatCharacter.h"
+#include "AbilitySystem/CombatGameplayTags.h"
+#include "AbilitySystemComponent.h"
 #include "Engine/LocalPlayer.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -65,6 +67,12 @@ void AGASEnemyCombatCharacter::SetupPlayerInputComponent(UInputComponent* Player
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AGASEnemyCombatCharacter::Look);
+
+		// Attacking
+		if (AttackAction)
+		{
+			EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AGASEnemyCombatCharacter::LightAttack);
+		}
 	}
 	else
 	{
@@ -88,6 +96,20 @@ void AGASEnemyCombatCharacter::Look(const FInputActionValue& Value)
 
 	// route the input
 	DoLook(LookAxisVector.X, LookAxisVector.Y);
+}
+
+void AGASEnemyCombatCharacter::LightAttack()
+{
+	UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
+	if (!ASC)
+	{
+		return;
+	}
+
+	FGameplayTagContainer AbilityTags;
+	AbilityTags.AddTag(FCombatGameplayTags::Get().Ability_Attack_Light);
+
+	ASC->TryActivateAbilitiesByTag(AbilityTags);
 }
 
 void AGASEnemyCombatCharacter::DoMove(float Right, float Forward)
