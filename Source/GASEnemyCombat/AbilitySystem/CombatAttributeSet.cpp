@@ -3,6 +3,7 @@
 #include "AbilitySystem/CombatAttributeSet.h"
 
 #include "Characters/GASCharacterBase.h"
+#include "Characters/GASEnemyCharacter.h"
 #include "GameplayEffectExtension.h"
 
 UCombatAttributeSet::UCombatAttributeSet()
@@ -36,20 +37,27 @@ void UCombatAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 	{
 		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
 
-		const AActor* OwningActor = GetOwningActor();
+		AActor* OwningActor = GetOwningActor();
+
 		UE_LOG(LogTemp, Warning, TEXT("Health changed for %s: Health=%.2f MaxHealth=%.2f"),
 			*GetNameSafe(OwningActor),
 			GetHealth(),
 			GetMaxHealth());
 
+		if (AGASEnemyCharacter* Enemy = Cast<AGASEnemyCharacter>(OwningActor))
+		{
+			Enemy->UpdateHealthBar();
+		}
+
 		if (GetHealth() <= 0.0f)
 		{
-			if (AGASCharacterBase* Character = Cast<AGASCharacterBase>(GetOwningActor()))
+			if (AGASCharacterBase* Character = Cast<AGASCharacterBase>(OwningActor))
 			{
 				Character->Die();
 			}
 		}
 	}
+	
 	else if (Data.EvaluatedData.Attribute == GetStaminaAttribute())
 	{
 		SetStamina(FMath::Clamp(GetStamina(), 0.0f, GetMaxStamina()));

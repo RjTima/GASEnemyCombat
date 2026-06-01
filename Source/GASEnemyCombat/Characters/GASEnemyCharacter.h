@@ -6,6 +6,8 @@
 #include "Characters/GASCharacterBase.h"
 #include "GASEnemyCharacter.generated.h"
 
+class UWidgetComponent;
+
 /**
  * Base GAS enemy character, ready for AIController integration.
  */
@@ -20,12 +22,20 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void TryActivateAttackAbility();
 
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void UpdateHealthBar();
+
 	virtual void Die() override;
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Combat")
 	void OnEnemyDeath();
 
 protected:
+	virtual void BeginPlay() override;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
+	UWidgetComponent* HealthBarComponent;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	float AttackRange = 180.0f;
 
