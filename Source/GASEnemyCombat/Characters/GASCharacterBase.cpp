@@ -3,12 +3,14 @@
 #include "Characters/GASCharacterBase.h"
 
 #include "AbilitySystem/CombatAttributeSet.h"
+#include "AbilitySystem/CombatGameplayTags.h"
 #include "AbilitySystemComponent.h"
+#include "Animation/AnimInstance.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameplayAbilitySpec.h"
 #include "GameplayEffect.h"
-#include "AbilitySystem/CombatGameplayTags.h"
 
 AGASCharacterBase::AGASCharacterBase()
 {
@@ -82,6 +84,28 @@ void AGASCharacterBase::ApplyDefaultEffects()
 
 		AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 	}
+}
+
+void AGASCharacterBase::PlayHitReact()
+{
+	if (IsDead() || !HitReactMontage)
+	{
+		return;
+	}
+
+	USkeletalMeshComponent* MeshComponent = GetMesh();
+	if (!MeshComponent)
+	{
+		return;
+	}
+
+	UAnimInstance* AnimInstance = MeshComponent->GetAnimInstance();
+	if (!AnimInstance)
+	{
+		return;
+	}
+
+	AnimInstance->Montage_Play(HitReactMontage);
 }
 
 void AGASCharacterBase::Die()

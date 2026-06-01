@@ -49,11 +49,19 @@ void UCombatAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 			Enemy->UpdateHealthBar();
 		}
 
+		const bool bWasDamaged = Data.EvaluatedData.Magnitude < 0.0f;
 		if (GetHealth() <= 0.0f)
 		{
 			if (AGASCharacterBase* Character = Cast<AGASCharacterBase>(OwningActor))
 			{
 				Character->Die();
+			}
+		}
+		else if (bWasDamaged)
+		{
+			if (AGASCharacterBase* Character = Cast<AGASCharacterBase>(OwningActor))
+			{
+				Character->PlayHitReact();
 			}
 		}
 	}

@@ -8,6 +8,7 @@
 #include "GASCharacterBase.generated.h"
 
 class UAbilitySystemComponent;
+class UAnimMontage;
 class UCombatAttributeSet;
 class UGameplayAbility;
 class UGameplayEffect;
@@ -34,6 +35,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	virtual void Die();
 
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void PlayHitReact();
+
 	UFUNCTION(BlueprintNativeEvent, Category = "Combat")
 	void OnDeath();
 
@@ -54,6 +58,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GAS")
 	TArray<TSubclassOf<UGameplayEffect>> DefaultEffects;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
+	UAnimMontage* HitReactMontage;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	bool bIsDead;
