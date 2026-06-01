@@ -8,6 +8,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameplayAbilitySpec.h"
 #include "GameplayEffect.h"
+#include "AbilitySystem/CombatGameplayTags.h"
 
 AGASCharacterBase::AGASCharacterBase()
 {
@@ -91,6 +92,11 @@ void AGASCharacterBase::Die()
 	}
 
 	bIsDead = true;
+	
+	if (AbilitySystemComponent)
+	{
+		AbilitySystemComponent->AddLooseGameplayTag(FCombatGameplayTags::Get().State_Dead);
+	}
 
 	if (UCharacterMovementComponent* MovementComponent = GetCharacterMovement())
 	{
