@@ -34,6 +34,12 @@ void UCombatAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
 		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
+
+		const AActor* OwningActor = GetOwningActor();
+		UE_LOG(LogTemp, Warning, TEXT("Health changed for %s: Health=%.2f MaxHealth=%.2f"),
+			*GetNameSafe(OwningActor),
+			GetHealth(),
+			GetMaxHealth());
 	}
 	else if (Data.EvaluatedData.Attribute == GetStaminaAttribute())
 	{
