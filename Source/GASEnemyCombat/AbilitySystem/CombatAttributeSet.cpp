@@ -2,6 +2,7 @@
 
 #include "AbilitySystem/CombatAttributeSet.h"
 
+#include "Characters/GASCharacterBase.h"
 #include "GameplayEffectExtension.h"
 
 UCombatAttributeSet::UCombatAttributeSet()
@@ -40,6 +41,14 @@ void UCombatAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 			*GetNameSafe(OwningActor),
 			GetHealth(),
 			GetMaxHealth());
+
+		if (GetHealth() <= 0.0f)
+		{
+			if (AGASCharacterBase* Character = Cast<AGASCharacterBase>(GetOwningActor()))
+			{
+				Character->Die();
+			}
+		}
 	}
 	else if (Data.EvaluatedData.Attribute == GetStaminaAttribute())
 	{

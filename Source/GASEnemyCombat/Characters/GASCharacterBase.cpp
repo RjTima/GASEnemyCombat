@@ -92,7 +92,9 @@ void AGASCharacterBase::Die()
 	}
 
 	bIsDead = true;
-	
+
+	UE_LOG(LogTemp, Warning, TEXT("%s died"), *GetNameSafe(this));
+
 	if (AbilitySystemComponent)
 	{
 		AbilitySystemComponent->AddLooseGameplayTag(FCombatGameplayTags::Get().State_Dead);
