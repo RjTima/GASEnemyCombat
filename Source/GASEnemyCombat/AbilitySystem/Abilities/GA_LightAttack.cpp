@@ -2,6 +2,7 @@
 
 #include "AbilitySystem/Abilities/GA_LightAttack.h"
 
+#include "AbilitySystem/CombatAttributeSet.h"
 #include "AbilitySystem/CombatGameplayTags.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemGlobals.h"
@@ -19,6 +20,53 @@ UGA_LightAttack::UGA_LightAttack()
 	FGameplayTagContainer AssetTags;
 	AssetTags.AddTag(FCombatGameplayTags::Get().Ability_Attack_Light);
 	SetAssetTags(AssetTags);
+}
+
+bool UGA_LightAttack::CanActivateAbility(
+	const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo,
+	const FGameplayTagContainer* SourceTags,
+	const FGameplayTagContainer* TargetTags,
+	FGameplayTagContainer* OptionalRelevantTags) const
+{
+	if (!Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags))
+	{
+		return false;
+	}
+
+	if (!ActorInfo || !ActorInfo->AvatarActor.IsValid())
+	{
+		return false;
+	}
+
+	const AGASCharacterBase* CombatCharacter = Cast<AGASCharacterBase>(ActorInfo->AvatarActor.Get());
+	if (!CombatCharacter)
+	{
+		return false;
+	}
+
+	UAbilitySystemComponent* AbilitySystemComponent = CombatCharacter->GetAbilitySystemComponent();
+	if (!AbilitySystemComponent)
+	{
+		return false;
+	}
+
+	const UCombatAttributeSet* CombatAttributeSet = AbilitySystemComponent->GetSet<UCombatAttributeSet>();
+	if (!CombatAttributeSet)
+	{
+		return false;
+	}
+
+	if (CombatAttributeSet->GetStamina() < StaminaCost)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s does not have enough stamina for Light Attack: Stamina=%.2f Cost=%.2f"),
+			*GetNameSafe(CombatCharacter),
+			CombatAttributeSet->GetStamina(),
+			StaminaCost);
+		return false;
+	}
+
+	return true;
 }
 
 void UGA_LightAttack::ActivateAbility(
