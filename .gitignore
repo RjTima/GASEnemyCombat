@@ -1,0 +1,78 @@
+# Visual Studio / Rider
+.vs/
+.idea/
+.vscode/
+*.sln.DotSettings.user
+*.VC.db
+*.VC.opendb
+
+# Rider
+.idea/
+*.sln.iml
+
+# Build files
+Binaries/
+Build/
+
+# Unreal generated files
+DerivedDataCache/
+Intermediate/
+Saved/
+
+# Unreal user files
+*.opensdf
+*.sdf
+*.suo
+*.tmp
+*.log
+
+# Crash reports
+Saved/Crashes/
+Saved/Logs/
+Saved/Autosaves/
+Saved/Backup/
+
+# Packaging
+*.pak
+*.sig
+
+# UBT
+*.target
+*.modules
+
+# Generated project files
+*.VC.db
+*.VC.opendb
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+
+# Unreal Engine generated
+*.uatbuildrecord
+*.ubt
+
+# Rider AI
+.ai/
+
+# Ignore local config overrides
+Saved/Config/WindowsEditor/
+
+# Ignore compiled shaders cache
+DerivedDataCache/
+
+# Ignore temporary files
+*.tmp
+*.temp
+
+# Ignore profiling data
+*.utrace
+*.ucache
+
+# Ignore Live Coding
+*.patch
+*.obj
