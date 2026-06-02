@@ -38,6 +38,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void PlayHitReact();
 
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void PlayDeathMontage();
+
 	UFUNCTION(BlueprintNativeEvent, Category = "Combat")
 	void OnDeath();
 
@@ -61,6 +64,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
 	UAnimMontage* HitReactMontage;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
+	UAnimMontage* DeathMontage;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	bool bIsDead;

@@ -5,9 +5,7 @@
 #include "AbilitySystem/CombatAttributeSet.h"
 #include "AbilitySystem/CombatGameplayTags.h"
 #include "AbilitySystemComponent.h"
-#include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "UI/CombatHealthBarWidget.h"
 
 AGASEnemyCharacter::AGASEnemyCharacter()
@@ -78,20 +76,8 @@ void AGASEnemyCharacter::Die()
 	}
 
 	Super::Die();
-
-	if (UCharacterMovementComponent* MovementComponent = GetCharacterMovement())
-	{
-		MovementComponent->StopMovementImmediately();
-		MovementComponent->DisableMovement();
-	}
-
-	if (UCapsuleComponent* CharacterCapsule = GetCapsuleComponent())
-	{
-		CharacterCapsule->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	}
-
-	SetLifeSpan(5.0f);
 	OnEnemyDeath();
+	SetLifeSpan(5.0f);
 }
 
 void AGASEnemyCharacter::OnEnemyDeath_Implementation()

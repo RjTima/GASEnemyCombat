@@ -108,6 +108,28 @@ void AGASCharacterBase::PlayHitReact()
 	AnimInstance->Montage_Play(HitReactMontage);
 }
 
+void AGASCharacterBase::PlayDeathMontage()
+{
+	if (!DeathMontage)
+	{
+		return;
+	}
+
+	USkeletalMeshComponent* MeshComponent = GetMesh();
+	if (!MeshComponent)
+	{
+		return;
+	}
+
+	UAnimInstance* AnimInstance = MeshComponent->GetAnimInstance();
+	if (!AnimInstance)
+	{
+		return;
+	}
+
+	AnimInstance->Montage_Play(DeathMontage);
+}
+
 void AGASCharacterBase::Die()
 {
 	if (bIsDead)
@@ -135,6 +157,7 @@ void AGASCharacterBase::Die()
 		CharacterCapsule->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 
+	PlayDeathMontage();
 	OnDeath();
 }
 
