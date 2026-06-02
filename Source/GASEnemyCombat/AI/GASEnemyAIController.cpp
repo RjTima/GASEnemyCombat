@@ -52,6 +52,17 @@ void AGASEnemyAIController::OnPossess(APawn* InPawn)
 	}
 }
 
+AActor* AGASEnemyAIController::GetCurrentTargetActor() const
+{
+	const UBlackboardComponent* BlackboardComponent = GetBlackboardComponent();
+	if (!BlackboardComponent)
+	{
+		return nullptr;
+	}
+
+	return Cast<AActor>(BlackboardComponent->GetValueAsObject(TargetActorKeyName));
+}
+
 void AGASEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
 	if (!Actor)
