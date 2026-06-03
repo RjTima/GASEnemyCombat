@@ -32,5 +32,9 @@ void FStateTreeTask_UpdateTargetActor::UpdateTargetActor(FStateTreeExecutionCont
 	FInstanceDataType& InstanceData = Context.GetInstanceData(*this);
 
 	AGASEnemyAIController* EnemyAIController = Cast<AGASEnemyAIController>(InstanceData.AIController);
-	InstanceData.TargetActor = EnemyAIController ? EnemyAIController->GetCurrentTargetActor() : nullptr;
+	AActor* ControllerTarget = EnemyAIController ? EnemyAIController->GetCurrentTargetActor() : nullptr;
+	InstanceData.TargetActor = ControllerTarget;
+
+	UE_LOG(LogTemp, Warning, TEXT("Controller Target = %s"), *GetNameSafe(ControllerTarget));
+	UE_LOG(LogTemp, Warning, TEXT("StateTree TargetActor = %s"), *GetNameSafe(InstanceData.TargetActor));
 }

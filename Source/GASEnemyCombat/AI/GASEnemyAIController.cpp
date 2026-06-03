@@ -4,6 +4,7 @@
 
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
+#include "GameFramework/Pawn.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
 
@@ -38,7 +39,7 @@ void AGASEnemyAIController::BeginPlay()
 	{
 		AIPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(
 			this,
-			&AGASEnemyAIController::OnTargetPerceptionUpdated);
+			&AGASEnemyAIController::HandleTargetPerceptionUpdated);
 	}
 }
 
@@ -54,39 +55,51 @@ void AGASEnemyAIController::OnPossess(APawn* InPawn)
 
 AActor* AGASEnemyAIController::GetCurrentTargetActor() const
 {
-	const UBlackboardComponent* BlackboardComponent = GetBlackboardComponent();
-	if (!BlackboardComponent)
-	{
-		return nullptr;
-	}
-
-	return Cast<AActor>(BlackboardComponent->GetValueAsObject(TargetActorKeyName));
+	return CurrentTargetActor;
 }
 
-void AGASEnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
+void AGASEnemyAIController::HandleTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
 	if (!Actor)
 	{
 		return;
 	}
 
-	UBlackboardComponent* BlackboardComponent = GetBlackboardComponent();
-	if (!BlackboardComponent)
+	if (Actor == GetPawn())
 	{
 		return;
 	}
+
+	APawn* SensedPawn = Cast<APawn>(Actor);
+	if (!SensedPawn || !SensedPawn->IsPlayerControlled())
+	{
+		return;
+	}
+
+	UBlackboardComponent* BlackboardComponent = GetBlackboardComponent();
 
 	if (Stimulus.WasSuccessfullySensed())
 	{
-		BlackboardComponent->SetValueAsObject(TargetActorKeyName, Actor);
-		UE_LOG(LogTemp, Warning, TEXT("%s saw %s"), *GetNameSafe(this), *GetNameSafe(Actor));
+		CurrentTargetActor = Actor;
+
+		if (BlackboardComponent)
+		{
+			BlackboardComponent->SetValueAsObject(TargetActorKeyName, Actor);
+		}
+
+		UE_LOG(LogTemp, Warning, TEXT("AI Target Set = %s"), *GetNameSafe(Actor));
 		return;
 	}
 
-	UObject* CurrentTarget = BlackboardComponent->GetValueAsObject(TargetActorKeyName);
-	if (CurrentTarget == Actor)
+	if (CurrentTargetActor == Actor)
 	{
-		BlackboardComponent->ClearValue(TargetActorKeyName);
-		UE_LOG(LogTemp, Warning, TEXT("%s lost %s"), *GetNameSafe(this), *GetNameSafe(Actor));
+		CurrentTargetActor = nullptr;
+
+		if (BlackboardComponent)
+		{
+			BlackboardComponent->ClearValue(TargetActorKeyName);
+		}
+
+		UE_LOG(LogTemp, Warning, TEXT("AI Target Cleared = %s"), *GetNameSafe(Actor));
 	}
 }

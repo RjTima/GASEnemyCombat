@@ -31,6 +31,9 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* InPawn) override;
 
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "AI")
+	TObjectPtr<AActor> CurrentTargetActor;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 	UAIPerceptionComponent* AIPerceptionComponent;
 
@@ -41,5 +44,5 @@ protected:
 	UBehaviorTree* BehaviorTreeAsset;
 
 	UFUNCTION()
-	void OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
+	void HandleTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
 };
